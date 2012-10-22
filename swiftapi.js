@@ -20,6 +20,7 @@ var swiftdemo = {
     authkey: "",
     baseurl: "",
     volume:  "ufodemo",
+    tempurlkey: "demotempurlkey",
     containers: {},
     auth: function (form) {
         var username = form.username.value;
@@ -99,7 +100,7 @@ var swiftdemo = {
         var unixtime = Math.ceil(d.valueOf() / 1000 + 600).toString();
         var hmac_body = ["GET", unixtime, target].join("\n");
         var shaObj = new jsSHA(hmac_body, "ASCII");
-        var sig = shaObj.getHMAC("demotempurlkey", "ASCII", "SHA-1", "HEX");
+        var sig = shaObj.getHMAC(swiftdemo.tempurlkey, "ASCII", "SHA-1", "HEX");
         var iframe = document.getElementById("hiddenDownloader");
         if ( iframe === null ) {
             iframe = document.createElement('iframe');
@@ -333,7 +334,7 @@ var swiftdemo = {
             $('#upload_form_expire').val(expires);
             var hmac_body = [target, redirect, max_file_size, max_file_count, expires ].join("\n");
             var shaObj = new jsSHA(hmac_body, "ASCII");
-            var sig = shaObj.getHMAC("demotempurlkey", "ASCII", "SHA-1", "HEX");
+            var sig = shaObj.getHMAC(swiftdemo.tempurlkey, "ASCII", "SHA-1", "HEX");
             $('#upload_form_sig').val(sig);
         },
     },
