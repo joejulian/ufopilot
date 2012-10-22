@@ -10,6 +10,7 @@ Install GlusterFS according to the [QuickStart Guide](http://www.gluster.org/com
 The rest of these instructions will assume you used the volume named gv0 as in the QuickStart Guide
 
 Install the swift components:
+
     yum install 'glusterfs-swift*' memcached
     
 Add some middleware to /etc/swift/proxy-server.conf
