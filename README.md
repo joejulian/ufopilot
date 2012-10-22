@@ -82,6 +82,11 @@ Create a container to be the web app container and set the permissions and index
 Add a key for tempurl signing
     
     swift -A $host/auth/v1.0 -U $volume:$user -K $pass post -m 'Temp-Url-Key:tempurlkey'
+
+Change the settings in swiftapi.js to reflect your volume name and your tempurlkey:
+
+    volume: "gv0",
+    tempurlkey: "tempurlkey",
     
 Upload these files to your web app container
 
