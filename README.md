@@ -67,11 +67,11 @@ Retrieve this package and it's dependency
 
 Set some shell variables to make the rest of this more generic and save you copy/pasters some time
 
-    $host=http://localhost:8080
-    $user=tommy
-    $pass=demo
-    $volume=gv0
-    $webcon=app
+    host=http://localhost:8080
+    user=tommy
+    pass=demo
+    volume=gv0
+    webcon=app
 
 Create a container to be the web app container and set the permissions and index page
 
