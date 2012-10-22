@@ -323,7 +323,6 @@ var swiftdemo = {
         },
         selectContainer: function() {
             var target = "/v1/AUTH_" + swiftdemo.volume + "/" + $('#upload_form_container').val();
-            alert("Target is " + target);
             $('#upload_form').attr("action",target);
             var redirect = window.location.pathname;
             $('#upload_form_redirect').val(redirect);
