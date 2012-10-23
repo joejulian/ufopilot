@@ -101,7 +101,7 @@ var swiftdemo = {
         var hmac_body = ["GET", unixtime, target].join("\n");
         var shaObj = new jsSHA(hmac_body, "ASCII");
         var sig = shaObj.getHMAC(swiftdemo.tempurlkey, "ASCII", "SHA-1", "HEX");
-        dwin = window.open(swiftdemo.baseurl + target + '?temp_url_sig=' + sig +
+        dwin = window.open(swiftdemo.baseurl + encodeURI(target) + '?temp_url_sig=' + sig +
             '&temp_url_expires=' + unixtime);
         dwin.document.title = "Download Page";
         window.focus();
@@ -164,7 +164,7 @@ var swiftdemo = {
             var items = [];
             var selected = "";
             $.each(swiftdemo.containers, function(key, val) {
-                items.push('<li id=li_' + val['name'] + '>' + swiftdemo.list.containerItem( key, val ) + '</li>');
+                items.push('<li id=' + swiftdemo.hashid('li_'+ val['name']) + '>' + swiftdemo.list.containerItem( key, val ) + '</li>');
             });
 
             $('#filelist').replaceWith($('<fieldset/>', {
@@ -175,7 +175,7 @@ var swiftdemo = {
                 }),
             }))
             $.each(swiftdemo.containers, function(key, val) {
-                var obj = document.getElementById(val['name']);
+                var obj = document.getElementById(swiftdemo.hashid(val['name']));
                 if(swiftdemo.container.selected[val['name']]) {
                     obj.checked = true
                 } else {
@@ -190,9 +190,10 @@ var swiftdemo = {
             } else {
                 selected = "";
             }
-            return '<label for="' + val['name'] + '">' + val['name'] + 
-                '</label><input type="checkbox" id="' + val['name'] + 
-                '" onchange="swiftdemo.container.select(this)"'+ selected + '>';
+            return '<label for="' + swiftdemo.hashid(val['name']) + '">' + val['name'] + 
+                '</label><input type="checkbox" id="' + swiftdemo.hashid(val['name']) + 
+                '" onchange="swiftdemo.container.select(this)"'+ selected + ' value="' +
+                val['name'] + '" />';
         },
         refresh: function() {
             this._getContainers();
@@ -238,19 +239,14 @@ var swiftdemo = {
             return false;
         },
         select: function(container) {
-            var checked = container.checked
-            var id = container.id
+            var thisli = document.getElementById(swiftdemo.hashid("li_" + container.value));
             if(container.checked) {
-                var thisli = document.getElementById("li_" + container.id);
-                thisli.style.listStyleType = "circle";
-                this._getObjects(container.id);
-                this.selected[container.id] = true;
+                this._getObjects(container.value);
             } else {
-                var thisli = document.getElementById("li_" + container.id);
-                thisli.style.listStyleType = "disc";
-                $('#files_' + container.id).replaceWith("");
-                this.selected[container.id] = false;
+                $('#' + swiftdemo.hashid('files_' + container.value)).replaceWith("");
             }
+            thisli.style.listStyleType = container.checked ? "circle" : "disc";
+            this.selected[container.id] = !this.selected[container.id];
         },
         _getObjects: function(container) {
             $.ajax({
@@ -273,21 +269,24 @@ var swiftdemo = {
         },
         view: function(container) {
             var items = [];
+            var itemid = null;
             $.each(swiftdemo.container.contents[container], function(key, val) {
+                itemid = swiftdemo.hashid('li_' + container + val['name']);
                 if(val.content_type != "application/directory") {
-                    items.push('<li id="li_' + container + '/' + val['name'] + '">' + 
-                        '<a href="#" onMouseDown="return swiftdemo.download(\'' + container + '/' + val['name'] +
-                        '\')">' + val['name'] + '</a></li>');
+                    items.push('<li id="' + itemid + '">' + 
+                        '<a href="#" onMouseDown="return swiftdemo.download(\'' + 
+                        container + '/' + val['name'] + '\')">' + 
+                        val['name'] + '</a></li>');
                 } else {
-                    items.push('<li id="li_' + container + '/' + val['name'] + '" style="list-style-type: disc">' + 
+                    items.push('<li id="' + itemid + '" style="list-style-type: disc">' + 
                         val['name'] + '</li>');
                 }
             });
 
-            $('#li_' + container).append($('<ul/>', {
-                'id'   : 'files_' + container,
+            $('#' + swiftdemo.hashid('li_' + container)).append($('<ul/>', {
+                'id'   : swiftdemo.hashid('files_' + container),
                 'class': 'files',
-                html   : items.join('')
+                html   : items.join(''),
             }));
         },
     },
@@ -317,9 +316,9 @@ var swiftdemo = {
             this.selectContainer();
         },
         selectContainer: function() {
-            var target = "/v1/AUTH_" + swiftdemo.volume + "/" + $('#upload_form_container').val();
-            $('#upload_form').attr("action",target);
-            var redirect = window.location.pathname;
+            var target = "/v1/AUTH_" + swiftdemo.volume + "/" + $('#upload_form_container').val()
+            $('#upload_form').attr("action",encodeURI(target));
+            var redirect = window.location.pathname + '#';
             $('#upload_form_redirect').val(redirect);
             var max_file_size = $('#upload_form_size').val();
             var max_file_count = $('#upload_form_count').val();
@@ -331,6 +330,10 @@ var swiftdemo = {
             var sig = shaObj.getHMAC(swiftdemo.tempurlkey, "ASCII", "SHA-1", "HEX");
             $('#upload_form_sig').val(sig);
         },
+    },
+    hashid: function(string) {
+        var shaObj = new jsSHA(string, "ASCII");
+        return "swift_" + shaObj.getHash("SHA-1", "HEX");
     },
 }
 
