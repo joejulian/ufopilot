@@ -101,7 +101,7 @@ var swiftdemo = {
         var hmac_body = ["GET", unixtime, target].join("\n");
         var shaObj = new jsSHA(hmac_body, "ASCII");
         var sig = shaObj.getHMAC(swiftdemo.tempurlkey, "ASCII", "SHA-1", "HEX");
-        dwin = window.open(swiftdemo.baseurl + encodeURI(target) + '?temp_url_sig=' + sig +
+        dwin = window.open(swiftdemo.baseurl + encodeURIComponent(target).replace('%2F','/') + '?temp_url_sig=' + sig +
             '&temp_url_expires=' + unixtime);
         dwin.document.title = "Download Page";
         window.focus();
@@ -208,7 +208,7 @@ var swiftdemo = {
             $.ajax({
                 type: "PUT",
                 processData: false,
-                url: encodeURI(swiftdemo.baseurl + "/v1/AUTH_" + swiftdemo.volume + "/" + container),
+                url: encodeURIComponent(swiftdemo.baseurl + "/v1/AUTH_" + swiftdemo.volume + "/" + container).replace('%2F','/'),
                 beforeSend: function (request) {
                     request.setRequestHeader("X-Auth-Token", swiftdemo.authkey);
                     request.setRequestHeader("Accept", "application/json");
@@ -252,7 +252,7 @@ var swiftdemo = {
             $.ajax({
                 type: "GET",
                 dataType: 'json',
-                url: encodeURI(swiftdemo.baseurl + "/v1/AUTH_" + swiftdemo.volume + "/" + container),
+                url: encodeURIComponent(swiftdemo.baseurl + "/v1/AUTH_" + swiftdemo.volume + "/" + container).replace('%2F','/'),
                 beforeSend: function (request) {
                     request.setRequestHeader("X-Auth-Token", swiftdemo.authkey);
                     request.setRequestHeader("Accept", "application/json");
@@ -317,7 +317,7 @@ var swiftdemo = {
         },
         selectContainer: function() {
             var target = "/v1/AUTH_" + swiftdemo.volume + "/" + $('#upload_form_container').val()
-            $('#upload_form').attr("action",encodeURI(target));
+            $('#upload_form').attr("action",encodeURIComponent(target).replace('%2F','/'));
             var redirect = window.location.pathname + '#';
             $('#upload_form_redirect').val(redirect);
             var max_file_size = $('#upload_form_size').val();
