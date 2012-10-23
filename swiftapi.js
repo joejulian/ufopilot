@@ -101,15 +101,10 @@ var swiftdemo = {
         var hmac_body = ["GET", unixtime, target].join("\n");
         var shaObj = new jsSHA(hmac_body, "ASCII");
         var sig = shaObj.getHMAC(swiftdemo.tempurlkey, "ASCII", "SHA-1", "HEX");
-        var iframe = document.getElementById("hiddenDownloader");
-        if ( iframe === null ) {
-            iframe = document.createElement('iframe');
-            iframe.id = "hiddenDownloader";
-            iframe.style.visibility = "hidden";
-            document.body.appendChild(iframe);
-        }
-        iframe.src = swiftdemo.baseurl + target + '?temp_url_sig=' + sig +
-            '&temp_url_expires=' + unixtime;
+        dwin = window.open(swiftdemo.baseurl + target + '?temp_url_sig=' + sig +
+            '&temp_url_expires=' + unixtime);
+        dwin.document.title = "Download Page";
+        window.focus();
         return false;
     },
     logout: function() {
