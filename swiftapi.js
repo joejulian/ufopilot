@@ -207,7 +207,7 @@ var swiftdemo = {
             $.ajax({
                 type: "PUT",
                 processData: false,
-                url: swiftdemo.baseurl + "/v1/AUTH_" + swiftdemo.volume + "/" + container,
+                url: encodeURI(swiftdemo.baseurl + "/v1/AUTH_" + swiftdemo.volume + "/" + container),
                 beforeSend: function (request) {
                     request.setRequestHeader("X-Auth-Token", swiftdemo.authkey);
                     request.setRequestHeader("Accept", "application/json");
@@ -256,7 +256,7 @@ var swiftdemo = {
             $.ajax({
                 type: "GET",
                 dataType: 'json',
-                url: swiftdemo.baseurl + "/v1/AUTH_" + swiftdemo.volume + "/" + container,
+                url: encodeURI(swiftdemo.baseurl + "/v1/AUTH_" + swiftdemo.volume + "/" + container),
                 beforeSend: function (request) {
                     request.setRequestHeader("X-Auth-Token", swiftdemo.authkey);
                     request.setRequestHeader("Accept", "application/json");
