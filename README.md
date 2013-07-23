@@ -59,11 +59,8 @@ Start your new services
 Retrieve this package and it's dependency
 
     git clone git://github.com/joejulian/ufopilot.git
-    wget https://github.com/downloads/Caligatio/jsSHA/jsSHA-1.31.tar.bz2
     cd ufopilot
-    wget -O - https://github.com/downloads/Caligatio/jsSHA/jsSHA-1.31.tar.bz2 | tar xjv -C /tmp -f - jsSHA/src/sha.js
-    mv /tmp/jsSHA/src/sha.js .
-    rm -rf /tmp/jsSHA
+    wget https://raw.github.com/Caligatio/jsSHA/master/src/sha.js
 
 Set some shell variables to make the rest of this more generic and save you copy/pasters some time
 
